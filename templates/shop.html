@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Shop
+{% endblock %}
+{% block content %}
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="{% url 'walletapp:myhome' %}"><i class="fa fa-home"></i> Home</a>
+                    <span>Shop</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Shop Section Begin -->
+<section class="shop spad">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12 col-md-12">
+                <div class="row">
+                    {% if shop %}
+                    {% for shops in shop %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="product__item">
+                            
+                            <div class="product__item__pic set-bg" data-setbg="{{shops.shop_image.url}}">
+
+
+                                <ul class="product__hover">
+                                    <a href="{{shops.shop_image.url}}" class="image-popup">
+
+                                    </a>
+
+
+                                </ul>
+
+
+                            </div>
+
+                            <div class="product__item__text">
+                                <div class="product__price">{{shops.shop_name}}</div>
+                                <h6><a href="#">{{shops.address}}</a>
+                                    {{shops.location}}</h6>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <h6 ><a href="{{shops.get_absolute_url}}" style="color: blue;">View Shop</a></h6>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+<!-- Shop Section End -->
+
+<!-- Instagram Begin -->
+{% endblock %}
