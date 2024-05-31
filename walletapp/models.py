@@ -3,7 +3,11 @@ from tinymce.models import HTMLField
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.conf import settings
+from django.urls import reverse
+from django.utils.text import slugify
 
+from django.db.models import Count
 # Create your models here.
 
 class CustomAccountManager(BaseUserManager):
@@ -107,27 +111,31 @@ class Categories(models.Model):
     #         return self.cat_img.url
           
 
-from django.db import models
-from django.urls import reverse
-from django.utils.text import slugify
 
-from django.db import models
-from django.urls import reverse
-from django.utils.text import slugify
-from django.db.models import Count
 
 class Shop(models.Model):
+    FEATURE = 'Feature'
+    NO_FEATURE = 'No Feature'
+    CHOOSE = ''
+    APPEAR_HOME_FIELD=[
+        (FEATURE, 'Appear on home'),
+        (NO_FEATURE, "Don't show on home"),
+        (CHOOSE, 'Please Choose')
+    ]
     shop_name = models.CharField(max_length=100, verbose_name='Shop Name')
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=500, verbose_name='Address')
+    email = models.EmailField(null=True, blank=True, verbose_name='Shop Email')
     shop_image = models.ImageField(upload_to='shop-images', null=True, blank=True)
     instagram = models.URLField(null=True, blank=True, verbose_name='Shop Instagram', help_text="The Instagram must be of the shop, not personal")
     phone_number = models.CharField(max_length=20, null=True, blank=True)
-    description = models.CharField(max_length=100, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    uploaded_at = models.DateTimeField(auto_now=True)
+    shop_bio= HTMLField()
     category = models.ForeignKey('Categories', on_delete=models.CASCADE)
-    email = models.EmailField(null=True, blank=True, verbose_name='Shop Email')
+    appear_home = models.CharField(max_length=50, choices=APPEAR_HOME_FIELD, default=CHOOSE)
+    featured_shop = models.BooleanField()
+    popular_shop = models.BooleanField()
+    nearest_shop = models.BooleanField()
     
     monday_start_time = models.TimeField(null=True, blank=True)
     monday_end_time = models.TimeField(null=True, blank=True)
@@ -143,41 +151,51 @@ class Shop(models.Model):
     saturday_end_time = models.TimeField(null=True, blank=True)
     sunday_start_time = models.TimeField(null=True, blank=True)
     sunday_end_time = models.TimeField(null=True, blank=True)
-    
-    def get_absolute_url(self):
-        return reverse('walletapp:shop_detail', args=[str(self.id)])
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            base_slug = slugify(self.shop_name)
-            slug = base_slug
-            num = 1
-            while Shop.objects.filter(slug=slug).exists():
-                slug = f"{base_slug}-{num}"
-                num += 1
-            self.slug = slug
-        super().save(*args, **kwargs)
+    created_at = models.DateTimeField(auto_now_add=True)
+    uploaded_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.shop_name
 
+    class Meta():
+        verbose_name_plural = 'Shops'
 
-    
+    def shop_img(self):
+        if self.shop_image:
+          return self.shop_image.url
+        else:
+            return '/static/uploads/logo/1641903359_favicon2.png'
+
+    def get_shop_url(self):
+        return reverse('walletapp:single_shop', kwargs={
+            'slug': self.slug,
+        })
     
 class Product(models.Model):
-    shop_name = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    shop_name = models.ForeignKey(Shop, verbose_name='Shop Name', on_delete=models.CASCADE, related_name='products')
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, null=True, blank=True)
     product_image1 = models.ImageField(upload_to='products/', null=True, blank=True)
     product_name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=300)
     price = models.CharField(max_length=10, blank=True, null=True)
+    no_of_stock = models.PositiveIntegerField(verbose_name='Number of stocks')
+    in_stock = models.BooleanField(default=True)
+    content = HTMLField()
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     uploaded_at = models.DateTimeField(auto_now=True)
+    users_wishlist = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_wishlist", blank=True)
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.product_name)
-        super().save(*args, **kwargs)
+    def show_image1(self):
+        if self.product_image1:
+            return self.product_image1.url
+        
+    def __str__(self): 
+        return self.product_name   
+    
+    def get_absolute_url(self):
+        return reverse('walletapp:product_detail', args=[self.slug])
 
-    def _str_(self): 
-        return self.product_name    
+    
+    class Meta():
+        verbose_name_plural = 'Products'

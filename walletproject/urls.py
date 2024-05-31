@@ -17,11 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from walletapp import views
-from django.conf import settings 
+from django.contrib.auth import views as auth_views
+from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
+
 urlpatterns = [
+    path('', views.myHome, name ='myhome'),
     path('admin/', admin.site.urls),
-    path('', include('walletapp.urls',namespace='walletapp')),
+    path('wallet/', include('walletapp.urls')),
     path('tinymce/', include('tinymce.urls')),
 ]
 
