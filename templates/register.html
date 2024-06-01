@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Register
+{% endblock %}
+{% block content %}
+<style>
+    body {
+        overflow-x: hidden;
+    }
+    .sits .site-btn:hover {
+        color: brown;
+        background-color: white;
+        border: 1px solid brown;
+        transition: 0.5s;
+    }
+</style>
+<div class="row mt-5">
+    <div class="col-lg-5">
+        <div>
+            <img src="https://images.unsplash.com/photo-1716677951302-9eabc1512445?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8fA%3D%3D" alt="">
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <form class="account-form p-4 rounded col-lg-10 mx-auto" action="." method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h3 class="mb-2 font-weight-bold">Create an account</h3>
+            <p class="mb-4">It's free and only takes a minute.</p>
+
+            {% if form.errors %}
+            <p>Please correct the following errors:</p>
+            {% for field in form %}
+            {% if field.errors %}
+            <div class="alert alert-primary" role="alert">
+                {{ field.label }}: {{ field.errors|striptags }}
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+            <label>{{ form.user_name.label }}<span class="text-muted small">(Required)</span></label>
+            {{ form.user_name }}
+
+            <label>{{ form.email.label}}<span class="text-muted small">(Required)</span></label>
+            {{ form.email }}
+
+           
+
+            <label>{{ form.profile_picture.label}}</label>
+            {{ form.profile_picture }}
+
+            <label>{{ form.gender.label}}</label>
+            {{ form.gender }}
+
+            <label>{{ form.user_type.label}}</label>
+            {{ form.user_type }}
+
+            <label>{{ form.password.label}}</label>
+            <small class="form-text text-muted mb-4 small">At least 8 characters and 1 digit</small>
+            {{ form.password }}
+
+            <label>{{ form.password2.label}}<span class="text-muted small">(Required)</span></label>
+            {{ form.password2 }}
+            <button class="btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100" type="submit">Register</button>
+            <p class="text-center sits">
+                Already have an account? <a href="" class="site-btn">Sign in</a>
+            </p>
+        </form>
+    </div>
+</div>
+{% endblock %}

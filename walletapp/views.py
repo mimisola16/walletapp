@@ -12,13 +12,21 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import PriceFilterForm
 
 # Create your views here.
-def myHome(request):
-    
-   return render(request, 'index.html')
+class MyHome(TemplateView):
+    template_name = 'index.html'
+    def get_context_data(self, **kwargs):
+   
+        context = super().get_context_data(**kwargs)
+        context['product'] = Product.objects.order_by('-created_at')[:8]
+        context['popular_shop'] = Shop.objects.filter(popular_shop=True)[:4]
+        context[' nearest_shop'] = Shop.objects.order_by('-created_at')[3:5]
+        context['shops'] = Shop.objects.filter(appear_home='Feature')  # Filter shops that appear on the home page
+      
+        return context
 
-def myService(request):
+def blog(request):
     
-   return render(request, 'service.html')
+   return render(request, 'blog.html')
 def myContact(request):
     
    return render(request, 'contact.html')
@@ -86,7 +94,8 @@ def product(request):
     context = {
         'form': form,
         'products': products,
-        'cats': category
+        'cats': category,
+         
     }
     return render(request, 'products.html', context)
 

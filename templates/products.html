@@ -89,6 +89,10 @@
                                     <h6><a href="{{ product.get_absolute_url }}">{{product.product_name }}</a></h6>
 
                                     <div class="product__price">&#8358;{{ product.price }}</div>
+                                    <div class="shop-info1">
+                                        <img src="{{ product.shop_name.shop_img }}" class="shop-img img-fluid img-rounded" alt="{{ product.shop_name.shop_name }}">
+                                        <h5 class="shop-name"><strong>{{ product.shop_name.shop_name }}</strong></h5>
+                                    </div>
                                 </div>
                             </div>
                         </div>

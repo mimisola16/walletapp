@@ -21,13 +21,16 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.myHome, name ='myhome'),
+      path('', views.MyHome.as_view(), name='myhome'),
     path('admin/', admin.site.urls),
     path('wallet/', include('walletapp.urls')),
+    path('account/', include('account.urls')),
     path('tinymce/', include('tinymce.urls')),
 ]
+
 
 
 if settings.DEBUG: 

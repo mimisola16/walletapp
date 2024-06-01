@@ -192,6 +192,22 @@ ol {
 	background: #ffffff;
 }
 
+.shop-info1 {
+    display: flex;
+    align-items: center;
+}
+
+.shop-img {
+    margin-right: 10px;
+    width: 50px; /* Adjust as needed */
+    height: 50px; /* Adjust as needed */
+    border-radius: 50%;
+}
+
+.shop-name {
+    margin: 0; /* Remove any default margin */
+    font-size: 1rem; /* Adjust as needed */
+}
 .loader {
 	width: 40px;
 	height: 40px;
