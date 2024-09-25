@@ -1,0 +1,36 @@
+{% extends 'base.html' %} {% load static %} {% block title %} About 
+{% endblock%} {% block content %}
+<section class="categories">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 p-0">
+          <div
+            class="categories__item set-bg"
+            data-setbg="{% static 'img/categories/category-5.jpg' %}"
+          >
+            <div class="categories__text">
+              <h1 class="text-center">About Us</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="discount mt-5">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="discount__pic">
+          <img src="{% static 'img/discount.jpg' %}" alt="" />
+        </div>
+      </div>
+      <div class="col-lg-6 categories__text">
+        <h1>About Mimi STORE</h1>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

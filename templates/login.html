@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Register
+{% endblock %}
+{% block content %}
+<style>
+	body {
+		overflow-x: hidden;
+	}
+
+	.sits .site-btn:hover {
+		color: brown;
+		background-color: white;
+		border: 1px solid brown;
+		transition: 0.5s;
+	}
+</style>
+<div class="row mt-5">
+	<div class="col-lg-5">
+		<div>
+			<img src="https://images.unsplash.com/photo-1716677951302-9eabc1512445?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8fA%3D%3D"
+				alt="">
+		</div>
+	</div>
+	<div class="col-lg-7">
+		<form class="account-form p-4 rounded col-lg-10 mx-auto" action="." method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<h3 class="mb-2 font-weight-bold">Login</h3>
+
+
+			{% if messages %}
+			{% for mess in messages %}
+			<div class="alert alert-danger">{{mess}}</div>
+			{% endfor %}
+			{% endif %}
+
+			<div class="form-group">
+				<label for="exampleInputEmail1">Username</label>
+				<input type="email" name='username' class="form-control" id="exampleInputEmail1"
+					aria-describedby="emailHelp" placeholder="Enter Username">
+			</div>
+			<div class="form-group">
+				<label for="exampleInputPassword1">Password</label>
+				<input type="password" name='password' class="form-control" id="password" placeholder="Password">
+			</div>
+			<div class="form-group">
+				<input type="checkbox" id="show-password">
+				<label for="show-password">Show Password</label>
+			</div>
+			<button class="btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100" type="submit">Login</button>
+
+
+
+			<p class="text-center sits">
+				Don't have an account? <a href="{% url 'account:register' %}" class="site-btn">Sign up</a>
+			</p>
+		</form>
+	</div>
+</div>
+{% endblock %}

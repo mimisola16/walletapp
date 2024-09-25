@@ -1,35 +1,65 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404,redirect
 from.models import *
 from django.db.models import Count
 from django.core.paginator import Paginator
-from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.conf import settings
 from django.views.generic import ListView, DetailView, TemplateView
 from django.db.models import Count, Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import PriceFilterForm
+from .forms import *
+from django.http import HttpResponse
+from django.core import mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.contrib import messages
 
 # Create your views here.
 class MyHome(TemplateView):
     template_name = 'index.html'
     def get_context_data(self, **kwargs):
-   
+        
         context = super().get_context_data(**kwargs)
         context['product'] = Product.objects.order_by('-created_at')[:8]
         context['popular_shop'] = Shop.objects.filter(popular_shop=True)[:4]
-        context[' nearest_shop'] = Shop.objects.order_by('-created_at')[3:5]
-        context['shops'] = Shop.objects.filter(appear_home='Feature')  # Filter shops that appear on the home page
+        context['hot_trend'] = Shop.objects.order_by('-created_at')[3:5]
+        context['featured_shop'] = Shop.objects.filter(appear_home='Feature')[:4]  # Filter shops that appear on the home page
+        context['best_seller_product']=Product.objects.filter(best_seller_product=True).order_by('-created_at')[1:4]
       
         return context
 
 def blog(request):
     
    return render(request, 'blog.html')
-def myContact(request):
+
+def myAbout(request):
     
-   return render(request, 'contact.html')
+    return render(request, 'about.html' )
+
+def myContact(request): 
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        subject = 'Contact Us'
+        context = {
+            'name':name,
+            'phone':phone,
+            'email':email,
+            'message': message
+        }
+        html_message = render_to_string('mail-template.html', context)
+        plain_message = strip_tags(html_message)
+        from_email = 'Mimi STORES'
+        send = mail.send_mail(subject, plain_message, from_email, ['mariamafolabi231@gmail.com', email], html_message=html_message, fail_silently=True)
+        if send:
+            messages.success(request, 'Email sent, you will recieve an email shorthly!')
+        else:
+            messages.error(request, 'Mail not sent')
+
+    return render(request, 'contact.html')
 
 
 

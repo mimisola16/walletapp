@@ -134,8 +134,8 @@ class Shop(models.Model):
     category = models.ForeignKey('Categories', on_delete=models.CASCADE)
     appear_home = models.CharField(max_length=50, choices=APPEAR_HOME_FIELD, default=CHOOSE)
     featured_shop = models.BooleanField()
-    popular_shop = models.BooleanField()
-    nearest_shop = models.BooleanField()
+    popular_shop = models.BooleanField(null=True)
+    
     
     monday_start_time = models.TimeField(null=True, blank=True)
     monday_end_time = models.TimeField(null=True, blank=True)
@@ -182,6 +182,9 @@ class Product(models.Model):
     no_of_stock = models.PositiveIntegerField(verbose_name='Number of stocks')
     in_stock = models.BooleanField(default=True)
     content = HTMLField()
+    description =models.CharField(max_length=100, null=True)
+    best_seller_product = models.BooleanField(null=True, blank=True)
+    hot_trend= models.BooleanField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     uploaded_at = models.DateTimeField(auto_now=True)
     users_wishlist = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_wishlist", blank=True)
