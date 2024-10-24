@@ -43,7 +43,7 @@
         <ul class="offcanvas__widget">
             <li><span class="icon_search search-switch"></span></li>
 
-            <li><a href="" role="button" type="button"><span class="icon_bag_alt"></span>
+            <li><a href="{% url 'walletapp:shop-cart' %}" role="button" type="button"><span class="icon_bag_alt"></span>
                 {% with total_qty=basket|length %}
                 <div id="basket-qty" class="basket-qty">
                     {% if total_qty > 0 %}
@@ -111,9 +111,9 @@
                             <li><a href="{% url 'walletapp:contact' %}">Contact</a></li>
                             {% if user.is_authenticated %}
                             <li><a href="">Account</a></li>
-                            {% else%}
-                            <!-- <li><a href="{% url 'walletapp:contact' %}">Contact</a></li>
-                            {% endif %} -->
+                            {% endif %}
+                            
+                            
                         </ul>
                     </nav>
                 </div>
@@ -155,7 +155,7 @@
                         <ul class="header__right__widget">
                             <li><span class="icon_search search-switch"></span></li>
 
-                            <li><a href="" role="button" type="button"><span class="icon_bag_alt"></span>
+                            <li><a href="{% url 'walletapp:shop-cart' %}" role="button" type="button"><span class="icon_bag_alt"></span>
                                 {% with total_qty=basket|length %}
                                 <div id="basket-qty" class="basket-qty">
                                     {% if total_qty > 0 %}

@@ -43,6 +43,7 @@ def login_user(request):
     return render(request,'login.html')
 
 def dashboard_view(request):
+    
     return render(request, 'dashboard/pages/index.html')
             
 

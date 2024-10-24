@@ -38,6 +38,7 @@ def myAbout(request):
     return render(request, 'about.html' )
 
 def myContact(request): 
+    location=Location.objects.all()
     if request.method == 'POST':
         name = request.POST.get('name')
         phone = request.POST.get('phone')
@@ -48,12 +49,13 @@ def myContact(request):
             'name':name,
             'phone':phone,
             'email':email,
-            'message': message
+            'message': message,
+            'location':location
         }
         html_message = render_to_string('mail-template.html', context)
         plain_message = strip_tags(html_message)
         from_email = 'Mimi STORES'
-        send = mail.send_mail(subject, plain_message, from_email, ['mariamafolabi231@gmail.com', email], html_message=html_message, fail_silently=True)
+        send = mail.send_mail(subject, plain_message, from_email, [ email], html_message=html_message, fail_silently=True)
         if send:
             messages.success(request, 'Email sent, you will recieve an email shorthly!')
         else:
@@ -62,6 +64,10 @@ def myContact(request):
     return render(request, 'contact.html')
 
 
+
+def shopCart(request):
+    
+    return render(request, 'shop-cart.html')
 
 class ShopList(ListView):
     model = Shop

@@ -20,7 +20,7 @@ class CustomAccountManager(BaseUserManager):
         Create and save a user with the given email and password.
         """
         if not email:
-            raise ValueError(_("The Email must be set"))
+            raise ValueError(("The Email must be set"))
         email = self.normalize_email(email)
         user = self.model(email=email, user_name=user_name, **other_fields)
         user.set_password(password)
@@ -202,3 +202,14 @@ class Product(models.Model):
     
     class Meta():
         verbose_name_plural = 'Products'
+
+
+class Location(models.Model):
+    address=models.TextField(max_length=100, null=True)
+    phone = models.CharField(max_length=100, null=True) 
+    support=models.EmailField()
+    
+    
+    def __str__(self): 
+        return self.address
+    

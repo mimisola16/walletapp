@@ -27,26 +27,36 @@ contact
                 <div class="col-lg-6 col-md-6">
                     <div class="contact__content">
                         <div class="contact__address">
+                            {% if location %}
+                            {% for locations in location %}
                             <h5>Contact info</h5>
                             <ul>
                                 <li>
                                     <h6><i class="fa fa-map-marker"></i> Address</h6>
-                                    <p>160 Pennsylvania Ave NW, Washington, Castle, PA 16101-5161</p>
+                                    <p>{{locations.address}}</p>
                                 </li>
                                 <li>
                                     <h6><i class="fa fa-phone"></i> Phone</h6>
-                                    <p><span>125-711-811</span><span>125-668-886</span></p>
+                                    <p><span>{{locations.phone}}</span></p>
                                 </li>
                                 <li>
                                     <h6><i class="fa fa-headphones"></i> Support</h6>
-                                    <p>Support.photography@gmail.com</p>
+                                    <p>{{locations.support}}</p>
                                 </li>
                             </ul>
+                            {% endfor %}
+			            {% endif %}
                         </div>
+                        
                         <div class="contact__form">
                             <h5>SEND MESSAGE</h5>
                             <form action="#" method="post">
                                 {% csrf_token%}
+                                {% if messages %}
+			                    {% for mess in messages %}
+                                <div class="alert {{mess.tags}}">{{mess}}</div>
+			                    {% endfor %}
+			                    {% endif %}
                                 <input type="text" placeholder="Name" name="name">
                                 <input type="text" placeholder="Email" name="email">
                                 <input type="text" placeholder="Phone Number" name="phone">
