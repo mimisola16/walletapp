@@ -1,5 +1,50 @@
-<li>Name: {{ name }}</li>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<li>Email: {{ email }}</li>
-<li>Phone: {{ phone }}</li>
-<li>Message: {{ message }}</li>
+    <title>Ashion | Contact</title>
+     <!-- Google Font -->
+     <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+     rel="stylesheet">
+ 
+     <!-- Css Styles -->
+     <link rel="stylesheet" href="{% static 'frontend/css/bootstrap.min.css' %}" type="text/css">
+     <link rel="stylesheet" href="{% static 'frontend/css/font-awesome.min.css' %}" type="text/css">
+     <link rel="stylesheet" href="{% static 'frontend/css/elegant-icons.css' %}" type="text/css">
+     <link rel="stylesheet" href="{% static 'frontend/css/jquery-ui.min.css' %}" type="text/css">
+     <link rel="stylesheet" href="{% static 'frontend/css/magnific-popup.css' %}" type="text/css">
+     <link rel="stylesheet" href="{% static 'frontend/css/owl.carousel.min.css' %}" type="text/css">
+     <link rel="stylesheet" href="{% static 'frontend/css/slicknav.min.css' %}" type="text/css">
+     <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}" type="text/css">
+</head>
+<body>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus, architecto, reprehenderit nostrum
+         placeat deleniti eos eligendi assumenda quis blanditiis nesciunt reiciendis ratione doloribus nisi sapiente
+         aspernatur earum voluptate itaque. Cupiditate, ullam quas? Impedit quam error eos consequatur quas illum nesciunt
+           laudantium iusto rem. A eaque blanditiis laborum quam, ab numquam! Nobis deleniti, nostrum voluptates, quae, nem
+           o ex quo labore nulla similique autem veniam in corporis consectetur laudantium numquam repudiandae dolores praese
+           ntium omnis quam sit. Facilis quibusdam sed corrupti dolorum distinctio, officiis
+         esse maxime molestiae alias. Nemo labore cumque animi. Vel soluta impedit facere fugit perspiciatis omnis sint 
+         suscipit?</p>
+
+         <hr>
+         <div class="categories__text">
+             <h1 style="background-color: rgb(0, 4, 255); text-align: center; color: rgb(255, 255, 255); padding: 30px; border-radius: 10px;">Ashion</h1>
+        </div>
+
+
+
+    <ul>
+        <li>Name: {{ name }}</li>
+       
+        <li>Email: {{ email }}</li>
+        <li>Phone: {{ phone }}</li>
+        <li>Message: {{ message }}</li>
+    </ul>
+    
+</body>
+</html>

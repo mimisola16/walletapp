@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+
+Ashion | Cart
+
+{% endblock %}
+{% block content %}
+
+    <!-- Shop Cart Section Begin -->
+    <section class="shop-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                  {% if basket|length == 0 %}
+                  <div class="cart__btn">
+                   Your basket is empty 
+                </div>
+                 
+                   {% else %}
+                    <div class="shop__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {% for item in basket %} 
+                              {% with product=item.product %}
+                                <tr class="product-item" data-index="{{product.id}}">
+                                    <td class="cart__product__item">
+                                        <img src="{{ product.show_image1 }}" class="w-25" alt="">
+                                        <div class="cart__product__item__title">
+                                            <h6>{{ product.title }}</h6>
+                                            
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">{{product.price}}</td>
+                                    <td class="cart__quantity">
+                                        <div class="">
+                                          <select id="select{{product.id}}" class="form-select w-50" aria-label="Default select example">
+                                            <option value="" selected disabled hidden>{{item.qty}}</option>
+                                             
+                                            <option value="">1</option>
+                                            <option value="">2</option>
+                                            <option value="">3</option>
+                                            <option value="">4</option>
+                                            <option value="">5</option>
+                                            <option value="">6</option>
+                                            <option value="">7</option>
+                                            <option value="">8</option>
+                                            <option value="">9</option>
+                                            <option value="">10</option>
+                                            <option value="">11</option>
+                                            <option value="">12</option>
+                                            <option value="">13</option>
+                                            <option value="">14</option>
+                                            <option value="">15</option>
+                                            <option value="">16</option>
+                                            <option value="">17</option>
+                                            <option value="">18</option>
+                                            <option value="">19</option>
+                                            <option value="">20</option>
+                                          </select>
+                                         
+                                        </div>
+                                    </td>
+                                    <td class="cart__total"><button type="button" id="update-button" data-index="{{product.id}}" class="update-button text-decoration-none small ps-3 btn btn-success">Update</button></td>
+                                   <td>
+                                    
+                                    <button type="button" id="delete-button" data-index="{{product.id}}" class="delete-button text-decoration-none small btn btn-danger">Delete</button>
+                                  </div>
+                                   </td>
+                                </tr>
+                                {% endwith %} 
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="cart__btn">
+                        <a href="{% url 'walletapp:product' %}">Continue Shopping</a>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="discount__content">
+                        <h6>Discount codes</h6>
+                        <form action="#">
+                            <input type="text" placeholder="Enter your coupon code">
+                            <button type="submit" class="site-btn">Apply</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6 offset-lg-2">
+                    <div class="cart__total__procced">
+                        <h6>Cart total</h6>
+                        <ul>
+                            <li>Subtotal <span id="subtotal">&#8358; {{basket.get_subtotal_price}}</span></li>
+                            
+                            <li>Total <span id="total">&#8358; {{basket.get_total_price}}</span></li>
+                        </ul>
+                        {% if basket|length == 0 %}
+                        <a aria-disabled="true"   class="primary-btn">Checkout securely</a>
+                        {% else %}
+                        <a href="{% url 'checkout:deliverychoices' %}" class="primary-btn">Checkout securely</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Cart Section End -->
+
+
+
+
+
+
+<script>
+  // Delete Item
+  $(document).on("click", ".delete-button", function (e) {
+    e.preventDefault();
+    var prodid = $(this).data("index");
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_delete" %}',
+      data: {
+        productid: $(this).data("index"),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+        $('.product-item[data-index="' + prodid + '"]').remove();
+
+          if(json.qty == 0){
+            total = 0
+            subtotal = 0
+          }
+          else{
+            total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
+            subtotal = json.subtotal
+          }
+
+        document.getElementById("subtotal").innerHTML = subtotal;
+        document.getElementById("basket-qty").innerHTML = json.qty;
+        document.getElementById("total").innerHTML = total;
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+  // Update Item
+  $(document).on("click", ".update-button", function (e) {
+    e.preventDefault();
+    var prodid = $(this).data("index");
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_update" %}',
+      data: {
+        productid: $(this).data("index"),
+        productqty: $("#select" + prodid + " option:selected").text(),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+
+        total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
+        document.getElementById("basket-qty").innerHTML = json.qty;
+        document.getElementById("subtotal").innerHTML = json.subtotal;
+        document.getElementById("total").innerHTML = total;
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+</script>
+
+{% endblock %}

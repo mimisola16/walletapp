@@ -20,7 +20,6 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 STATIC_DIR = os.path.join(BASE_DIR,"static")
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = [STATIC_DIR,]
 
 
 
@@ -48,6 +47,8 @@ INSTALLED_APPS = [
     'walletapp',
     'tinymce',
      'account',
+     'basket',
+     'checkout'
 ]
 
 MIDDLEWARE = [
@@ -88,6 +89,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                 'basket.context_processor.basket',
+                        
             ],
         },
     },
@@ -151,3 +154,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'walletapp.CustomUser'
+
+#Basket session ID
+BASKET_SESSION_ID = 'basket'
+LOGIN_URL = '/account/login/'

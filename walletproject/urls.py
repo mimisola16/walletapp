@@ -27,8 +27,10 @@ urlpatterns = [
     path('', views.MyHome.as_view(), name='myhome'),
     path('admin/', admin.site.urls),
     path('wallet/', include('walletapp.urls')),
-    path('account/', include('account.urls')),
+    path('account/', include('account.urls', namespace='account')),
     path('tinymce/', include('tinymce.urls')),
+     path('basket/', include('basket.urls', namespace='basket')),
+    path('checkout/', include('checkout.urls', namespace='checkout'))
 ]
 
 

@@ -21,20 +21,16 @@ class MyHome(TemplateView):
     def get_context_data(self, **kwargs):
         
         context = super().get_context_data(**kwargs)
-        context['product'] = Product.objects.order_by('-created_at')[:8]
+        context['product'] = Products.objects.order_by('-created_at')[:8]
         context['popular_shop'] = Shop.objects.filter(popular_shop=True)[:4]
         context['hot_trend'] = Shop.objects.order_by('-created_at')[3:5]
         context['featured_shop'] = Shop.objects.filter(appear_home='Feature')[:4]  # Filter shops that appear on the home page
-        context['best_seller_product']=Product.objects.filter(best_seller_product=True).order_by('-created_at')[1:4]
+        context['best_seller_product']=Products.objects.filter(best_seller_product=True).order_by('-created_at')[1:4]
       
         return context
 
-def blog(request):
-    
-   return render(request, 'blog.html')
 
 def myAbout(request):
-    
     return render(request, 'about.html' )
 
 def myContact(request): 
@@ -65,9 +61,6 @@ def myContact(request):
 
 
 
-def shopCart(request):
-    
-    return render(request, 'shop-cart.html')
 
 class ShopList(ListView):
     model = Shop
@@ -91,19 +84,47 @@ class ShopList(ListView):
  
 def shop_detail(request, slug,):
     shop = get_object_or_404(Shop, slug=slug)
-    products = Product.objects.filter(shop_name=shop)
-    product_count = Product.objects.filter(shop_name=shop).count()
+    products = Products.objects.filter(shop_name=shop)
+    product_count = Products.objects.filter(shop_name=shop).count()
     return render(request, 'shop-detail.html', {'shop_det':shop, 'product': products, 'counts': product_count  })
 
 
 def shop_products(request, shop_slug):
     shop = get_object_or_404(Shop, slug=shop_slug)
-    products = Product.objects.filter(shop_name=shop)
+    products = Products.objects.filter(shop_name=shop)
     return render(request, 'shop-products.html', {'shop': shop, 'products': products})
 
+def category_list(request, category_slug=None):
+    category = get_object_or_404(Categories, slug=category_slug)
+    products = Products.objects.filter(category__in=Categories.objects.get(slug=category_slug).get_descendants(include_self=True))
+    form = PriceFilterForm(request.GET) 
+    if form.is_valid():
+        min_price = form.cleaned_data['min_price']
+        max_price = form.cleaned_data['max_price']
+        if min_price:
+            products = products.filter(price__gte=min_price)
+        if max_price:
+            products = products.filter(price__lte=max_price)
+    paginator = Paginator(products, 6)
+    page = request.GET.get('page')
+
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        products = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range, deliver last page of results.
+        products = paginator.page(paginator.num_pages)
+    context = {
+        'products': products,
+        'form': form,
+        'category': category,
+    }
+    return render(request, "category.html", context)
 
 def product(request):
-    product_list = Product.objects.order_by('-created_at')
+    product_list = Products.objects.order_by('-created_at')
     form = PriceFilterForm(request.GET)
     category = Categories.objects.all()
 
@@ -137,6 +158,10 @@ def product(request):
 
 
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug)
+    product = get_object_or_404(Products, slug=slug)
     return render(request, 'product-details.html', {'product':product})
  
+def search(request):
+	q=request.GET['q']
+	data=Products.objects.filter(title__icontains=q).order_by('-id')
+	return render(request,'frontend/search.html',{'data':data})

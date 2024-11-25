@@ -9,7 +9,7 @@ class PriceFilterForm(forms.Form):
     max_price = forms.DecimalField(decimal_places=2, required=False, widget=forms.TextInput(
             attrs={'class': 'form-control mb-3', 'placeholder': '', 'class':'form-control',}))
     
-    model = Product
+    model = Products
     
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=100, required=True)

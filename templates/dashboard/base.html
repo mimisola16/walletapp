@@ -1,0 +1,438 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>{% block title %} {% endblock %}</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{% static 'dashboard/vendors/feather/feather.css' %}" />
+    <link rel="stylesheet" href="{% static 'dashboard/vendors/ti-icons/css/themify-icons.css' %}" />
+    <link rel="stylesheet" href="{% static 'dashboard/vendors/css/vendor.bundle.base.css' %}" />
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link
+      rel="stylesheet"
+      href="{% static 'dashboard/vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}"
+    />
+    <link rel="stylesheet" href="{% static 'dashboard/vendors/ti-icons/css/themify-icons.css' %}" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'dashboard/js/select.dataTables.min.css' %}"
+    />
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'dashboard/css/vertical-layout-light/style.css' %}" />
+    <!-- endinject -->
+    <link rel="shortcut icon" href="images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div
+          class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center"
+        >
+          <a class="navbar-brand brand-logo mr-5" href="index.html"
+            ><img src="images/logo.svg" class="mr-2" alt="logo"
+          /></a>
+          <a class="navbar-brand brand-logo-mini" href="index.html"
+            ><img src="images/logo-mini.svg" alt="logo"
+          /></a>
+        </div>
+        <div
+          class="navbar-menu-wrapper d-flex align-items-center justify-content-end"
+        >
+          <button
+            class="navbar-toggler navbar-toggler align-self-center"
+            type="button"
+            data-toggle="minimize"
+          >
+            <span class="icon-menu"></span>
+          </button>
+          <ul class="navbar-nav mr-lg-2">
+            <li class="nav-item nav-search d-none d-lg-block">
+              <div class="input-group">
+                <div
+                  class="input-group-prepend hover-cursor"
+                  id="navbar-search-icon"
+                >
+                  <span class="input-group-text" id="search">
+                    <i class="icon-search"></i>
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="navbar-search-input"
+                  placeholder="Search now"
+                  aria-label="search"
+                  aria-describedby="search"
+                />
+              </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link count-indicator dropdown-toggle"
+                id="notificationDropdown"
+                href="#"
+                data-toggle="dropdown"
+              >
+                <i class="icon-bell mx-0"></i>
+                <span class="count"></span>
+              </a>
+              <div
+                class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="notificationDropdown"
+              >
+                <p class="mb-0 font-weight-normal float-left dropdown-header">
+                  Notifications
+                </p>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-success">
+                      <i class="ti-info-alt mx-0"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <h6 class="preview-subject font-weight-normal">
+                      Application Error
+                    </h6>
+                    <p class="font-weight-light small-text mb-0 text-muted">
+                      Just now
+                    </p>
+                  </div>
+                </a>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-warning">
+                      <i class="ti-settings mx-0"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <h6 class="preview-subject font-weight-normal">Settings</h6>
+                    <p class="font-weight-light small-text mb-0 text-muted">
+                      Private message
+                    </p>
+                  </div>
+                </a>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-info">
+                      <i class="ti-user mx-0"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <h6 class="preview-subject font-weight-normal">
+                      New user registration
+                    </h6>
+                    <p class="font-weight-light small-text mb-0 text-muted">
+                      2 days ago
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </li>
+            <li class="nav-item nav-profile dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                data-toggle="dropdown"
+                id="profileDropdown"
+              >
+                <img src="images/faces/face28.jpg" alt="profile" />
+              </a>
+              <div
+                class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                aria-labelledby="profileDropdown"
+              >
+                <a class="dropdown-item">
+                  <i class="ti-settings text-primary"></i>
+                  Settings
+                </a>
+                <a data-toggle="modal" data-target="#exampleModal" style="cursor: pointer;"
+                            class=" border-0 basket-btn">
+                            
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                                    class="bi bi-door-closed" viewBox="0 0 16 16">
+                                    <path
+                                        d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V2zm1 13h8V2H4v13z" />
+                                    <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0z" />
+                                </svg>
+                            
+                            <span class="fs15 fw500">Logout</span>
+                        </a>
+              </div>
+            </li>
+            <li class="nav-item nav-settings d-none d-lg-flex">
+              <a class="nav-link" href="#">
+                <i class="icon-ellipsis"></i>
+              </a>
+            </li>
+          </ul>
+          <button
+            class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
+            type="button"
+            data-toggle="offcanvas"
+          >
+            <span class="icon-menu"></span>
+          </button>
+        </div>
+      </nav>
+
+      <div class="container-fluid page-body-wrapper">
+        {% if request.user.user_type == 'Vendor' %}
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">
+                <i class="icon-grid menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="collapse"
+                href="#ui-basic"
+                aria-expanded="false"
+                aria-controls="ui-basic"
+              >
+                <i class="icon-layout menu-icon"></i>
+                <span class="menu-title">Shop</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="ui-basic">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:add_shop' %}"
+                      >Add Shop</a
+                    >
+                  </li>
+                  
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:view_shop' %}"
+                      >View Shop</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="collapse"
+                href="#form-elements"
+                aria-expanded="false"
+                aria-controls="form-elements"
+              >
+                <i class="icon-columns menu-icon"></i>
+                <span class="menu-title">Products</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="form-elements">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:add_product' %}"
+                      >Add Products</a
+                    >
+                  </li>
+                 
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:view_product' %}"
+                      >View Products</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </li>
+          
+          
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="collapse"
+                href="#auth"
+                aria-expanded="false"
+                aria-controls="auth"
+              >
+                <i class="icon-head menu-icon"></i>
+                <span class="menu-title">User Pages</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="auth">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:user_profile' %}">
+                      View Profile
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:change' %}">
+                      Change Password
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:edit' %}">
+                      Edit Profile
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+           
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'myhome' %}">
+                <i class="icon-paper menu-icon"></i>
+                <span class="menu-title">Home</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        {% else %}
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">
+                <i class="icon-grid menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+              </a>
+            </li>
+           
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="collapse"
+                href="#charts"
+                aria-expanded="false"
+                aria-controls="charts"
+              >
+                <i class="icon-bar-graph menu-icon"></i>
+                <span class="menu-title">Shipping Address</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="charts">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:address' %}">My Shipping Address</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="collapse"
+                href="#tables"
+                aria-expanded="false"
+                aria-controls="tables"
+              >
+                <i class="icon-grid-2 menu-icon"></i>
+                <span class="menu-title">Orders</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="tables">
+                <ul class="nav flex-column sub-menu">
+                 
+                </ul>
+              </div>
+            </li>
+          
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-toggle="collapse"
+                href="#auth"
+                aria-expanded="false"
+                aria-controls="auth"
+              >
+                <i class="icon-head menu-icon"></i>
+                <span class="menu-title">User Pages</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="auth">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:user_profile' %}">
+                      View Profile
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:change' %}">
+                      Change Password
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account:edit' %}">
+                      Edit Profile
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+           
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'myhome' %}">
+                <i class="icon-paper menu-icon"></i>
+                <span class="menu-title">Home</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        {% endif %}
+       
+        {% block content %} {% endblock %}
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">My-Shop - {{user.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>{{user.name}}, Are you sure you want to Logout, You could stay a while!!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <a href="{% url 'account:logout' %}"><button type="button" class="btn btn-primary">Yes I'm Sure</button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- plugins:js -->
+    <script src="{% static 'dashboard/vendors/js/vendor.bundle.base.js' %}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{% static 'dashboard/vendors/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'dashboard/vendors/datatables.net/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'dashboard/vendors/datatables.net-bs4/dataTables.bootstrap4.js' %}"></script>
+    <script src="{% static 'dashboard/js/dataTables.select.min.js' %}"></script>
+
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{% static 'dashboard/js/off-canvas.js' %}"></script>
+    <script src="{% static 'dashboard/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'dashboard/js/template.js' %}"></script>
+    <script src="{% static 'dashboard/js/settings.js' %}"></script>
+    <script src="{% static 'dashboard/js/todolist.js' %}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <script src="{% static 'dashboard/js/dashboard.js' %}"></script>
+    <script src="{% static 'dashboard/js/Chart.roundedBarCharts.js' %}"></script>
+    <!-- End custom js for this page-->
+  </body>
+</html>

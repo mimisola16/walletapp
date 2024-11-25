@@ -1,0 +1,97 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block title %}
+View Profile
+{% endblock %}
+{% block content %}
+ <div class="container mt-3">
+    <h1 class="h3">View Profile</h1>
+    
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            
+              <div class="row">
+                <div class="col-md-12">
+                  
+                  <div class="card mb-4">
+                    <h5 class="card-header">Profile Details</h5>
+                    <!-- Account -->
+                    <div class="card-body">
+                      <div class="d-flex align-items-start align-items-sm-center gap-4">
+                        <img
+                        src="{{ request.user.profile_picture.url }}" alt="{{ user.first_name }}'s profile picture"
+                        class="d-block rounded"
+                        height="150"
+                        width="150"
+                        id="uploadedAvatar"
+                        />
+                        <div class="button-wrapper">
+                        
+                            <span class="d-none d-sm-block"> <h4>{{ user.name}}'s Profile</h4></span>
+                            <i class="bx bx-upload d-block d-sm-none"></i>
+                
+                        </div>
+                      </div>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                      <form id="formAccountSettings" method="POST" onsubmit="return false">
+                        <div class="row">
+                         
+                          <div class="mb-3 col-md-6">
+                            <label for="lastName" class="form-label">Full Name</label>
+                            <input
+                            class="form-control"
+                           
+                            value="{{ user.name}}"
+                           readonly
+                          />
+                          </div>
+                          <div class="mb-3 col-md-6">
+                            <label for="email" class="form-label">E-mail</label>
+                            <input
+                              class="form-control"
+                             
+                              value="{{ user.email}}"
+                             readonly
+                            />
+                          </div>
+                          <div class="mb-3 col-md-6">
+                            <label for="email" class="form-label">Gender</label>
+                            <input
+                              class="form-control"
+                             
+                              value="{{ user.gender}}"
+                             readonly
+                            />
+                          </div>
+                          <div class="mb-3 col-md-6">
+                            <label for="email" class="form-label">User Type</label>
+                            <input
+                              class="form-control"
+                             
+                              value="{{ user.user_type}}"
+                             readonly
+                            />
+                          </div>
+                         
+                        
+                        
+                        </div>
+                        
+                      </form>
+                    </div>
+                    <!-- /Account -->
+                  </div>
+                 
+                </div>
+              </div>
+            </div>
+            <!-- / Content -->
+
+          
+    <hr />
+ 
+{% endblock %}

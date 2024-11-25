@@ -5,8 +5,9 @@ from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.conf import settings
 from django.urls import reverse
+import uuid
 from django.utils.text import slugify
-
+from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models import Count
 # Create your models here.
 
@@ -89,22 +90,25 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 
-class Categories(models.Model):
-    cat_name = models.CharField(max_length=100, unique=True, verbose_name='Category Name', blank=True, null=True, )
-    slug = models.SlugField(unique=True)
-    created = models.DateTimeField(auto_now_add=True, help_text='This will automatically add a time when you click save')
-    modified = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return self.cat_name
+class Categories(MPTTModel):
+   
+    cat_name = models.CharField(verbose_name="Category Name",help_text="Required and unique",max_length=255,)
+    slug = models.SlugField( max_length=255, unique=True)
+    parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
+    is_active = models.BooleanField(default=True)
 
-    class Meta():
-        verbose_name_plural = 'Category'
+    class MPTTMeta:
+        order_insertion_by = ["cat_name"]
+
+
+    class Meta:
+        verbose_name_plural = 'Categories'
 
     def get_category_url(self):
-        return reverse('frontend:single_cat', kwargs={
-            'slug': self.slug,
-        })
+        return reverse('walletapp:single_cat', kwargs={'category_slug': self.slug})
+
+    def __str__(self):
+        return self.cat_name
 
     # def category_img(self):
     #     if self.cat_img:
@@ -171,23 +175,30 @@ class Shop(models.Model):
             'slug': self.slug,
         })
     
-class Product(models.Model):
+class Products(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     shop_name = models.ForeignKey(Shop, verbose_name='Shop Name', on_delete=models.CASCADE, related_name='products')
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, null=True, blank=True)
     product_image1 = models.ImageField(upload_to='products/', null=True, blank=True)
     product_name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=300)
-    price = models.CharField(max_length=10, blank=True, null=True)
+    price = models.DecimalField(verbose_name='Price', max_digits=10, decimal_places=2)
     no_of_stock = models.PositiveIntegerField(verbose_name='Number of stocks')
     in_stock = models.BooleanField(default=True)
     content = HTMLField()
-    description =models.CharField(max_length=100, null=True)
+    
     best_seller_product = models.BooleanField(null=True, blank=True)
     hot_trend= models.BooleanField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     uploaded_at = models.DateTimeField(auto_now=True)
     users_wishlist = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_wishlist", blank=True)
+
+    objects = models.Manager()
+    products = models.Manager()
+   
+    class Meta:
+        verbose_name_plural='Products'
+        ordering = ('-created_at',)
 
     def show_image1(self):
         if self.product_image1:
@@ -200,8 +211,6 @@ class Product(models.Model):
         return reverse('walletapp:product_detail', args=[self.slug])
 
     
-    class Meta():
-        verbose_name_plural = 'Products'
 
 
 class Location(models.Model):
@@ -212,4 +221,28 @@ class Location(models.Model):
     
     def __str__(self): 
         return self.address
-    
+
+class Address(models.Model):
+    """
+    Address
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    customer = models.ForeignKey(CustomUser, verbose_name="Customer", on_delete=models.CASCADE)
+    full_name = models.CharField( max_length=150)
+    phone = models.CharField(max_length=50)
+    postcode = models.CharField(max_length=50)
+    address_line = models.CharField(max_length=255)
+    address_line2 = models.CharField( max_length=255)
+    town_city = models.CharField( max_length=150)
+    delivery_instructions = models.CharField( max_length=255)
+    created_at = models.DateTimeField( auto_now_add=True)
+    updated_at = models.DateTimeField( auto_now=True)
+    default = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "Address"
+        verbose_name_plural = "Addresses"
+
+    def __str__(self):
+        return "Address"

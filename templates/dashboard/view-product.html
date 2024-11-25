@@ -1,0 +1,38 @@
+{% extends "dashboard/base.html" %}
+{% block title %}View Products{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h1 class="h3">Your Products</h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                    {% if product.product_image1 %}
+                    <img src="{{ product.product_image1.url }}" alt="{{ product.product_name }}" style="width: 50px; height: 50px;">
+                    {% else %}
+                    No Image
+                    {% endif %}
+                </td>
+                <td>{{ product.product_name }}</td>
+                <td>${{ product.price }}</td>
+                <td>{{ product.no_of_stock }}</td>
+                <td>
+                    <a href="{% url 'account:view_product_detail' slug=product.slug %}" class="btn btn-primary btn-sm">View</a>
+                    <a href="{% url 'account:edit_product' slug=product.slug %}" class="btn btn-warning btn-sm">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

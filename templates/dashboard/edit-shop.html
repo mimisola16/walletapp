@@ -1,0 +1,81 @@
+{% extends "dashboard/base.html" %}
+{% block title %}
+Edit {{ shop.shop_name }}
+{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h1 class="h3">Edit {{ shop.shop_name }}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                There are errors in the form. Please fix them and try again.
+            </div>
+        {% endif %}
+        
+        <div class="form-group">
+            <h4>General Details</h4>
+            <label for="{{ form.shop_name.id_for_label }}" class="font-weight-bold">Shop Name</label>
+            {{ form.shop_name }}
+            <label for="{{ form.address.id_for_label }}" class="font-weight-bold">Address</label>
+            {{ form.address }}
+            <label for="{{ form.email.id_for_label }}" class="font-weight-bold">Email</label>
+            {{ form.email }}
+            <label for="{{ form.phone_number.id_for_label }}" class="font-weight-bold">Phone Number</label>
+            {{ form.phone_number }}
+        </div>
+        <div class="form-group">
+            <h4>Shop Image</h4>
+            <label for="{{ form.shop_image.id_for_label }}" class="font-weight-bold">Shop Image</label>
+            {% if shop.shop_image %}
+                <div>
+                    <img src="{{ shop.shop_image.url }}" alt="Shop Image" width="100" height="100">
+                    <p>Current Image</p>
+                </div>
+            {% endif %}
+            {{ form.shop_image }}
+        </div>
+        <div class="form-group">
+            <h4>Shop Hours</h4>
+            <p class="small text-muted">Specify opening and closing times for each day.</p>
+            
+            <label for="{{ form.monday_start_time.id_for_label }}" class="font-weight-bold">Monday Start Time</label>
+            {{ form.monday_start_time }}
+            <label for="{{ form.monday_end_time.id_for_label }}" class="font-weight-bold">Monday End Time</label>
+            {{ form.monday_end_time }}
+
+            <label for="{{ form.tuesday_start_time.id_for_label }}" class="font-weight-bold">Tuesday Start Time</label>
+            {{ form.tuesday_start_time }}
+            <label for="{{ form.tuesday_end_time.id_for_label }}" class="font-weight-bold">Tuesday End Time</label>
+            {{ form.tuesday_end_time }}
+
+            <label for="{{ form.wednesday_start_time.id_for_label }}" class="font-weight-bold">Wednesday Start Time</label>
+            {{ form.wednesday_start_time }}
+            <label for="{{ form.wednesday_end_time.id_for_label }}" class="font-weight-bold">Wednesday End Time</label>
+            {{ form.wednesday_end_time }}
+
+            <label for="{{ form.thursday_start_time.id_for_label }}" class="font-weight-bold">Thursday Start Time</label>
+            {{ form.thursday_start_time }}
+            <label for="{{ form.thursday_end_time.id_for_label }}" class="font-weight-bold">Thursday End Time</label>
+            {{ form.thursday_end_time }}
+
+            <label for="{{ form.friday_start_time.id_for_label }}" class="font-weight-bold">Friday Start Time</label>
+            {{ form.friday_start_time }}
+            <label for="{{ form.friday_end_time.id_for_label }}" class="font-weight-bold">Friday End Time</label>
+            {{ form.friday_end_time }}
+
+            <label for="{{ form.saturday_start_time.id_for_label }}" class="font-weight-bold">Saturday Start Time</label>
+            {{ form.saturday_start_time }}
+            <label for="{{ form.saturday_end_time.id_for_label }}" class="font-weight-bold">Saturday End Time</label>
+            {{ form.saturday_end_time }}
+
+            <label for="{{ form.sunday_start_time.id_for_label }}" class="font-weight-bold">Sunday Start Time</label>
+            {{ form.sunday_start_time }}
+            <label for="{{ form.sunday_end_time.id_for_label }}" class="font-weight-bold">Sunday End Time</label>
+            {{ form.sunday_end_time }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

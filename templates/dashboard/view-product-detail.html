@@ -1,0 +1,18 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Product Details{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h1 class="h3">{{ product.product_name }}</h1>
+    <div>
+        <img src="{{ product.product_image1.url }}" alt="{{ product.product_name }}" style="width: 200px; height: auto;">
+    </div>
+    <p><strong>Price:</strong> ${{ product.price }}</p>
+    <p><strong>Stock:</strong> {{ product.no_of_stock }}</p>
+    <p><strong>Category:</strong> {{ product.category }}</p>
+    <p><strong>Description:</strong></p>
+    <div>{{ product.content|safe }}</div>
+    <p><strong>Best Seller:</strong> {{ product.best_seller_product|yesno:"Yes,No" }}</p>
+    <p><strong>Hot Trend:</strong> {{ product.hot_trend|yesno:"Yes,No" }}</p>
+    <a href="{% url 'account:view_product' %}" class="btn btn-secondary">Back to Products</a>
+</div>
+{% endblock %}

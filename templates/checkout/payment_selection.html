@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+
+Ashion | Delivery Options
+
+{% endblock %}
+{% block content %}
+
+<div class="container ">
+  <form id="payment-form">
+    <h3 class="mb-3">Billing address</h3>
+    <!-- Error messages in this element -->
+    <div id="card-errors" class="a" role="alert"></div>
+    <div class="row g-3">
+      <div class="col-sm-6">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="fName" placeholder="" required>
+        <div class="invalid-feedback">
+          Valid first name is required.
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label for="lastName" class="form-label">LastName</label>
+        <input type="text" class="form-control" id="lName" placeholder="" required>
+        <div class="invalid-feedback">
+          Valid lastname is required.
+        </div>
+      </div>
+      <div class="col-12">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+        <div class="invalid-feedback">
+          Please enter a valid email address for shipping updates.
+        </div>
+      </div>
+      <div class="col-12">
+        <label for="address" class="form-label">Address</label>
+        <input type="text" class="form-control" id="custAdd" placeholder="1234 Main St" required>
+        <div class="invalid-feedback">
+          Please enter your shipping address.
+        </div>
+      </div>
+      <div class="col-12">
+        <label for="address2" class="form-label">Address 2 <span class="text-muted">(Optional)</span></label>
+        <input type="text" class="form-control" id="custAdd2" placeholder="Apartment or suite">
+      </div>
+      <div class="col-md-6">
+        <label for="number" class="form-label">Phone number</label>
+        <input type="text" class="form-control" id="num" placeholder="080087665445">
+      </div>
+      <div class="col-md-6">
+        <label for="state" class="form-label">State</label>
+        <select class="form-select" id="state" required>
+          <option value="">Choose..</option>
+          <option>A</option>
+        </select>
+        <div class="invalid-feedback">
+          Please provide a valid state.
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label for="Postcode" class="form-label">Postcode</label>
+        <input type="text" class="form-control" id="postCode" placeholder="12345">
+       
+      </div>
+    </div>
+    
+    
+    <div class="col-12 categories__text mt-5">
+      <h1 class="h2">Payment Options</h1>
+    </div>
+      <div class="col-12">
+        <p>Please select your Payment option</p>
+      </div>
+      <hr />
+    </div>
+    
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-4 col-lg-4 order-md-last p-0 order-3">
+          <div class="d-flex bd-highlight ms-0">
+           
+            <div class="p-2 flex-grow-1 bd-highlight">Sub Total:</div>
+            <div class="p-2 bd-highlight"><span class="fw-bold h5">&#8358;</span><span id="sub_total"
+                class="fw-bold h5">{{basket.get_subtotal_price}}</span></div>
+          </div>
+          <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">Delivery Cost:</div>
+            <div class="p-2 bd-highlight"><span class="fw-bold h5">&#8358;</span><span id="delivery_price"
+                class="fw-bold h5">{{basket.get_delivery_price}}</span></div>
+          </div>
+          <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">Total:</div>
+            <div class="p-2 bd-highlight"><span class="fw-bold h5">&#8358;</span><span id="total"
+              class="fw-bold h5">{{basket.get_total_price}}</span></div>
+            </div>
+          </div>
+        <div class="col-md-7 col-lg-8 pe-0 pe-md-5">
+          <div id="paypal-button-container"></div>
+          <button class="btn btn-outline-success w-100" type="button" onclick="payWithPaystack()">Pay with Paystack</button>
+        </div>
+      </div>
+    </div>
+    
+  </form>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+  function payWithPaystack() {
+    var amount = `{{ basket.get_total_price }}` * 100; // Multiply by 100 to convert to kobo (Paystack's minimum unit)
+    var handler = PaystackPop.setup({
+      key: 'pk_test_db9118a0376eb304c98d8adc33eeabcec638dec0',
+      email: '{{ user.email }}',
+      amount: amount,
+      currency: "NGN",
+      ref: 'PAYSTACK-' + Math.floor((Math.random() * 1000000000) + 1),
+      metadata: {
+         custom_fields: [
+            {
+                display_name: "First Name",
+                variable_name: "First Name",
+                value: document.getElementById("fName").value
+            },
+            {
+                display_name: "Last Name",
+                variable_name: "Last Name",
+                value: document.getElementById("lName").value
+            },
+            {
+                display_name: "Address1",
+                variable_name: "Address1",
+                value: document.getElementById("custAdd").value
+            },
+            {
+                display_name: "Phone Number",
+                variable_name: "Phune",
+                value: document.getElementById("num").value
+            }
+         ]
+      },
+      callback: function(response) {
+          // handle successful payment here
+          var url = "{% url 'checkout:payment_completed' %}"
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+              'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+              reference: response.reference
+            })
+          }).then(function () {
+            location.href = "{% url 'checkout:payment_successful' %}";
+          })
+      },
+      onClose: function() {
+          alert('Payment was not completed');
+      }
+    });
+    handler.openIframe();
+  }
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+<!--     
+    <script>
+      function payWithPaystack(){
+        var handler = PaystackPop.setup({
+          key: 'pk_test_db9118a0376eb304c98d8adc33eeabcec638dec0',
+          email: '{{ user.email }}',
+          amount: `{{ basket.get_total_price | floatformat:2 }}`,
+          ref: 'PAYSTACK-' + Math.floor((Math.random() * 1000000000) + 1),
+          metadata: {
+             custom_fields: [
+                {
+                    display_name: "{{ product_name }}",
+                    variable_name: "product_name",
+                    value: "{{ product_name }}"
+                }
+             ]
+          },
+          callback: function(response){
+              var url = "{% url 'checkout:payment_completed' %}"
+              return fetch(url, {
+                  method: 'POST',
+                  headers: {
+                      'content-type': 'application/json',
+                      'X-CSRFToken': csrftoken,
+                  },
+                  body: JSON.stringify({
+                      reference: response.reference
+                  })
+              }).then(function () {
+                  location.href = "{% url 'checkout:payment_successful' %}";
+              })
+          },
+          onClose: function(){
+              alert('Payment cancelled by user');
+          }
+        });
+        handler.openIframe();
+      }
+      document.getElementById('paystack-button').addEventListener('click', function(e){
+          e.preventDefault();
+          payWithPaystack();
+      });
+      function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+    </script> -->
+    
+{% endblock %}

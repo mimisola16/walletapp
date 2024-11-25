@@ -1,0 +1,40 @@
+{% extends "dashboard/base.html" %}
+{% block title %}
+My Shops
+{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h1 class="h3">My Shops</h1>
+    <p>Below is the list of shops you have added:</p>
+    <hr />
+
+    {% if user_shops %}
+        <div class="row">
+            {% for shop in user_shops %}
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <img 
+                            src="{{ shop.shop_img }}" 
+                            class="card-img-top" 
+                            alt="{{ shop.shop_name }}" 
+                            style="height: 150px; object-fit: cover;"
+                        >
+                        <div class="card-body">
+                            <h5 class="card-title">{{ shop.shop_name }}</h5>
+                            <p class="card-text">{{ shop.address }}</p>
+                            <p><strong>Email:</strong> {{ shop.email }}</p>
+                            <p><strong>Phone:</strong> {{ shop.phone_number }}</p>
+                            <a href="{% url 'account:edit_shop' shop.slug %}" class="btn btn-primary btn-sm">Edit</a>
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            You haven't added any shops yet. Click <a href="{% url 'add_shop' %}">here</a> to add one.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
