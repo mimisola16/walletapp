@@ -12,6 +12,10 @@ from django.contrib.auth import update_session_auth_hash
 from .forms import *
 from django.shortcuts import render, redirect
 from account.forms import *
+from django.http import JsonResponse
+import requests
+import random
+from decimal import Decimal
 
 def register(request):
     if request.method == 'POST':
@@ -43,8 +47,9 @@ def login_user(request):
     return render(request,'login.html')
 
 def dashboard_view(request):
-    
-    return render(request, 'dashboard/index.html')
+    wallet, created = Wallet.objects.get_or_create(user=request.user)
+    address_count = Address.objects.filter(customer=request.user).count()
+    return render(request, 'dashboard/index.html', {'wallet': wallet, "address_count": address_count })
             
 @login_required
 def edit_details(request):
@@ -249,5 +254,49 @@ def delete_user(request):
         logout(request)
         return redirect('account:login')
     except CustomUser.DoesNotExist:
-        # Handle the case when no matching user is found
+       
         return HttpResponse("User not found")
+
+@login_required  
+def top_up_wallet(request):
+    wallet, created = Wallet.objects.get_or_create(user=request.user) 
+    paystack_key = settings.PAYSTACK_PUBLIC_KEY
+
+    if request.method == "POST":
+        amount = request.POST.get("amount")
+        reference = f"PAYSTACK-WALLET-{random.randint(1000000, 9999999)}"
+
+        return render(request, "dashboard/wallet-top-up.html", {
+            "amount": amount,
+            "paystack_key": paystack_key,
+            "reference": reference,
+            "wallet": wallet
+        })
+
+   
+    return render(request, "dashboard/wallet-top-up.html", {"wallet": wallet, "paystack_key": paystack_key})
+
+def wallet_success(request):
+    reference = request.GET.get("reference")
+    # print("Reference received:", reference)  
+
+    if not reference:
+        return redirect("account:top_up_wallet") 
+
+    headers = {"Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
+    url = f"https://api.paystack.co/transaction/verify/{reference}"
+    
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    # print("Paystack Response:", data)  
+
+    if data["status"] and data["data"]["status"] == "success":
+        amount = Decimal(data["data"]["amount"]) / Decimal(100)  
+        wallet, created = Wallet.objects.get_or_create(user=request.user)
+        wallet.balance += amount 
+        wallet.save()
+
+        return render(request, "dashboard/success.html", {"amount": amount, "wallet": wallet})
+    
+    return render(request, "dashboard/top-up-failure.html")  
+

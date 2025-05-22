@@ -1,0 +1,48 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block title %}
+Wallet Top-Up
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="h3 text-center">Top Up Wallet</h1>
+    <p class="text-muted text-center">Enter an amount to fund your wallet securely.</p>
+
+    <!-- Wallet Balance Section -->
+    <div class="alert alert-info text-center fw-bold m-auto w-50" style="font-weight: 900;">
+        Available Balance: ₦{{ wallet.balance|default:"0.00" }}
+    </div>
+
+    <div class="card shadow-sm p-4 mx-auto" style="max-width: 400px;">
+        <form method="POST" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="amount" class="form-label fw-bold">Amount (₦)</label>
+                <input type="number" name="amount" id="amount" class="form-control" required>
+            </div>
+            <button class="btn btn-primary w-100 py-2 fw-bold" type="submit">Proceed to Payment</button>
+        </form>
+    </div>
+
+    {% if amount %}
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script>
+        function payWithPaystack() {
+            var handler = PaystackPop.setup({
+                key: '{{ paystack_key }}',
+                email: '{{ user.email }}',
+                amount: {{ amount }} * 100,  // Convert to Kobo
+                currency: "NGN",
+                ref: '{{ reference }}',
+                callback: function(response) {
+                    window.location.href = "{% url 'account:wallet_success' %}?reference=" + response.reference;
+                }
+            });
+            handler.openIframe();
+        }
+        payWithPaystack();
+    </script>
+    {% endif %}
+</div>
+{% endblock %}

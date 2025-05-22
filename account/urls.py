@@ -32,5 +32,9 @@ urlpatterns = [
     path('products/', views.view_products, name='view_product'),
     path('product/<slug:slug>/', views.view_product_detail, name='view_product_detail'),
     path('product/<slug:slug>/edit/', views.edit_product, name='edit_product'),
+    
+    path("wallet/top-up/", views.top_up_wallet, name="top_up_wallet"),
+    path("wallet/success/", views.wallet_success, name="wallet_success"),
+    
    
 ]

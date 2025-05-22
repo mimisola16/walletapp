@@ -40,7 +40,7 @@ def myContact(request):
         phone = request.POST.get('phone')
         email = request.POST.get('email')
         message = request.POST.get('message')
-        subject = 'Contact Us'
+        subject = 'Mimistores'
         context = {
             'name':name,
             'phone':phone,

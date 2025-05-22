@@ -1,0 +1,13 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block title %}
+Wallet Top-Up Successful
+{% endblock %}
+{% block content %}
+<div class="container text-center mt-5">
+    <h2 class="text-success">Payment Successful! ✅</h2>
+    <p>You have successfully added <strong>₦{{ amount }}</strong> to your wallet.</p>
+    <p>Your new balance is: <strong>₦{{ wallet.balance }}</strong></p>
+    <a href="{% url 'account:dashboard' %}" class="btn btn-primary mt-3">Go to Dashboard</a>
+</div>
+{% endblock %}
