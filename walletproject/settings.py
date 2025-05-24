@@ -158,3 +158,5 @@ AUTH_USER_MODEL = 'walletapp.CustomUser'
 #Basket session ID
 BASKET_SESSION_ID = 'basket'
 LOGIN_URL = '/account/login/'
+PAYSTACK_PUBLIC_KEY = 'pk_test_db9118a0376eb304c98d8adc33eeabcec638dec0'
+PAYSTACK_SECRET_KEY = 'sk_test_b437a50bcfe02ae4d9b33baac55f90bae488b92b'

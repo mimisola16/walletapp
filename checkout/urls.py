@@ -1,7 +1,7 @@
 
 from django.urls import include, path
 
-from . import views
+from checkout import views
 
 app_name = "checkout"
 
@@ -14,4 +14,5 @@ urlpatterns = [
     # path("payment_complete/", views.payment_complete, name="payment_complete"),
     path("payment_completed/", views.payment_completed, name="payment_completed"),
     path("payment_successful/", views.payment_successful, name="payment_successful"),
+    path("pay-with-wallet/", views.pay_with_wallet, name="pay_with_wallet"),
 ]

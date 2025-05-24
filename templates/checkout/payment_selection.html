@@ -99,12 +99,13 @@ Ashion | Delivery Options
         <div class="col-md-7 col-lg-8 pe-0 pe-md-5">
           <div id="paypal-button-container"></div>
           <button class="btn btn-outline-success w-100" type="button" onclick="payWithPaystack()">Pay with Paystack</button>
+          <button class="btn btn-primary w-100 mt-2" type="button" onclick="payWithWallet()">Pay with Wallet</button>
         </div>
       </div>
     </div>
     
   </form>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
   function payWithPaystack() {
     var amount = `{{ basket.get_total_price }}` * 100; // Multiply by 100 to convert to kobo (Paystack's minimum unit)
@@ -161,6 +162,31 @@ Ashion | Delivery Options
     handler.openIframe();
   }
 
+  
+
+  function payWithWallet() {
+    var amount = `{{ basket.get_total_price }}`;  
+
+    fetch("{% url 'checkout:pay_with_wallet' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ amount: amount })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === "success") {
+        alert("Payment successful!");
+        location.href = "{% url 'checkout:payment_successful' %}";
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(error => console.error("Error:", error));
+  }
+
   function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -176,6 +202,9 @@ Ashion | Delivery Options
     return cookieValue;
   }
 </script>
+
+   
+    
 <!--     
     <script>
       function payWithPaystack(){

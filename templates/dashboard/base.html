@@ -38,10 +38,10 @@
         <div
           class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center"
         >
-          <a class="navbar-brand brand-logo mr-5" href="index.html"
+          <a class="navbar-brand brand-logo mr-5" href="{% url 'account:dashboard' %}"
             ><img src="images/logo.svg" class="mr-2" alt="logo"
           /></a>
-          <a class="navbar-brand brand-logo-mini" href="index.html"
+          <a class="navbar-brand brand-logo-mini" href="{% url 'account:dashboard' %}"
             ><img src="images/logo-mini.svg" alt="logo"
           /></a>
         </div>
@@ -192,7 +192,7 @@
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
           <ul class="nav">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">
+              <a class="nav-link" href="{% url 'account:dashboard' %}">
                 <i class="icon-grid menu-icon"></i>
                 <span class="menu-title">Dashboard</span>
               </a>
@@ -300,7 +300,7 @@
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
           <ul class="nav">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">
+              <a class="nav-link" href="{% url 'account:dashboard' %}">
                 <i class="icon-grid menu-icon"></i>
                 <span class="menu-title">Dashboard</span>
               </a>
@@ -327,6 +327,12 @@
                 </ul>
               </div>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account:top_up_wallet' %}">
+                  <i class="icon-wallet menu-icon"></i>
+                  <span class="menu-title">Top Up Wallet</span>
+              </a>
+           </li>
             <li class="nav-item">
               <a
                 class="nav-link"

@@ -1,6 +1,7 @@
 import json
 
-from walletapp.models import Address
+from decimal import Decimal
+from walletapp.models import *
 from basket.basket import Basket
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -66,8 +67,10 @@ def payment_selection(request):
 
     session = request.session
     if "address" not in request.session:
-        messages.success(request, "Please select address option")
-        return HttpResponseRedirect(request.META["HTTP_REFERER"])
+        session["address"] = {"address_id": str(addresses[0].id)}
+    else:
+        session["address"]["address_id"] = str(addresses[0].id)
+        session.modified = True
 
     return render(request, "checkout/payment_selection.html", {})
 
@@ -129,3 +132,24 @@ def payment_successful(request):
     }
     
     return render(request, "checkout/payment_successful.html",context)
+
+
+@login_required
+def pay_with_wallet(request):
+    if request.method == "POST":
+        user_wallet = Wallet.objects.get(user=request.user)
+        
+        # Convert amount to Decimal
+        try:
+            amount = Decimal(request.POST.get("amount", "0"))  
+        except:
+            return JsonResponse({"status": "error", "message": "Invalid amount format."})
+
+        if user_wallet.balance >= amount:
+            user_wallet.balance -= amount  # Deduct amount from wallet
+            user_wallet.save()
+            return JsonResponse({"status": "success", "message": "Payment successful!"})
+        else:
+            return JsonResponse({"status": "error", "message": "Insufficient wallet balance."})
+    
+    return JsonResponse({"status": "error", "message": "Invalid request."})
