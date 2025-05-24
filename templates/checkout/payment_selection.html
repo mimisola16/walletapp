@@ -109,7 +109,7 @@ Ashion | Delivery Options
   function payWithPaystack() {
     var amount = `{{ basket.get_total_price }}` * 100; // Multiply by 100 to convert to kobo (Paystack's minimum unit)
     var handler = PaystackPop.setup({
-      key: 'pk_test_db9118a0376eb304c98d8adc33eeabcec638dec0',
+      key: 'pk_test_adb00b36dba301a0832489223e93a899e96a570c',
       email: '{{ user.email }}',
       amount: amount,
       currency: "NGN",

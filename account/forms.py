@@ -3,7 +3,6 @@ from walletapp.models import *
 from django.contrib.auth.forms import SetPasswordForm
 from django.core import validators
 from django.contrib.auth.forms import UserCreationForm
-from django_countries.widgets import CountrySelectWidget
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.forms import PasswordChangeForm
 
