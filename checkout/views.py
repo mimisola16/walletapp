@@ -12,6 +12,7 @@ from django.shortcuts import render
 from django.conf import settings
 from checkout.paystack import PaystackClient
 import requests
+from walletapp.models import Address  
 from walletapp.models import *
 
 
@@ -54,12 +55,12 @@ def delivery_address(request):
     addresses = Address.objects.filter(customer=request.user).order_by("-default")
 
     if "address" not in request.session:
-        session["address"] = {"address_id": str(addresses[0].id)}
+        session["address"] = {"address_id": str(Address[0].id)}
     else:
-        session["address"]["address_id"] = str(addresses[0].id)
+        session["address"]["address_id"] = str(Address[0].id)
         session.modified = True
 
-    return render(request, "checkout/delivery_address.html", {"addresses": addresses})
+    return render(request, "checkout/delivery_address.html", {"addresses": Address})
 
 
 @login_required
