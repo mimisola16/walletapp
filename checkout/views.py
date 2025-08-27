@@ -45,35 +45,75 @@ def basket_update_delivery(request):
 
 
 @login_required
+@login_required
 def delivery_address(request):
-
     session = request.session
+
     if "purchase" not in request.session:
         messages.success(request, "Please select delivery option")
-        return HttpResponseRedirect(request.META["HTTP_REFERER"])
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
 
     addresses = Address.objects.filter(customer=request.user).order_by("-default")
 
-    if "address" not in request.session:
-        session["address"] = {"address_id": str(Address[0].id)}
+    if addresses.exists():
+        if "address" not in session:
+            session["address"] = {"address_id": str(addresses[0].id)}
+        else:
+            session["address"]["address_id"] = str(addresses[0].id)
+            session.modified = True
     else:
-        session["address"]["address_id"] = str(Address[0].id)
-        session.modified = True
+        messages.warning(request, "You don't have any saved addresses.")
+        return HttpResponseRedirect("address_creation_url")  # Replace with actual URL name
 
-    return render(request, "checkout/delivery_address.html", {"addresses": Address})
+    return render(request, "checkout/delivery_address.html", {"addresses": addresses})
+
+# def delivery_address(request):
+
+#     session = request.session
+#     if "purchase" not in request.session:
+#         messages.success(request, "Please select delivery option")
+#         return HttpResponseRedirect(request.META["HTTP_REFERER"])
+
+#     addresses = Address.objects.filter(customer=request.user).order_by("-default")
+
+#     if "address" not in request.session:
+#         session["address"] = {"address_id": str(Address[0].id)}
+#     else:
+#         session["address"]["address_id"] = str(Address[0].id)
+#         session.modified = True
+
+#     return render(request, "checkout/delivery_address.html", {"addresses": Address})
 
 
 @login_required
+@login_required
 def payment_selection(request):
-
     session = request.session
-    if "address" not in request.session:
-        session["address"] = {"address_id": str(addresses[0].id)}
+    addresses = Address.objects.filter(customer=request.user).order_by("-default")
+
+    if addresses.exists():
+        if "address" not in session:
+            session["address"] = {"address_id": str(addresses[0].id)}
+        else:
+            session["address"]["address_id"] = str(addresses[0].id)
+            session.modified = True
     else:
-        session["address"]["address_id"] = str(addresses[0].id)
-        session.modified = True
+        messages.warning(request, "You need to add a delivery address before proceeding.")
+        return HttpResponseRedirect("address_creation_url")  # Replace with actual URL name
 
     return render(request, "checkout/payment_selection.html", {})
+
+# def payment_selection(request):
+    
+
+#     session = request.session
+#     if "address" not in request.session:
+#         session["address"] = {"address_id": str(Address[0].id)}
+#     else:
+#         session["address"]["address_id"] = str(Address[0].id)
+#         session.modified = True
+
+#     return render(request, "checkout/payment_selection.html", {})
 
 
 
@@ -134,23 +174,24 @@ def payment_successful(request):
     
     return render(request, "checkout/payment_successful.html",context)
 
-
 @login_required
 def pay_with_wallet(request):
+    wallet, created = Wallet.objects.get_or_create(user=request.user)
+
+    if request.method == "GET":
+        return JsonResponse({"balance": str(wallet.balance)})
+
     if request.method == "POST":
-        user_wallet = Wallet.objects.get(user=request.user)
-        
-        # Convert amount to Decimal
         try:
-            amount = Decimal(request.POST.get("amount", "0"))  
+            amount = Decimal(request.POST.get("amount", "0"))
         except:
             return JsonResponse({"status": "error", "message": "Invalid amount format."})
 
-        if user_wallet.balance >= amount:
-            user_wallet.balance -= amount  # Deduct amount from wallet
-            user_wallet.save()
+        if wallet.balance >= amount:
+            wallet.balance -= amount
+            wallet.save()
             return JsonResponse({"status": "success", "message": "Payment successful!"})
         else:
             return JsonResponse({"status": "error", "message": "Insufficient wallet balance."})
-    
+
     return JsonResponse({"status": "error", "message": "Invalid request."})

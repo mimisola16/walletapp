@@ -50,7 +50,7 @@ def myContact(request):
         }
         html_message = render_to_string('mail-template.html', context)
         plain_message = strip_tags(html_message)
-        from_email = 'Mimi STORES'
+        from_email = 'Mimistores <mariamafolabi231@gmail.com>'
         send = mail.send_mail(subject, plain_message, from_email, [ email], html_message=html_message, fail_silently=True)
         if send:
             messages.success(request, 'Email sent, you will recieve an email shorthly!')

@@ -35,6 +35,7 @@ urlpatterns = [
     
     path("wallet/top-up/", views.top_up_wallet, name="top_up_wallet"),
     path("wallet/success/", views.wallet_success, name="wallet_success"),
-    
+
+    path('password_reset/', views.password_reset_request, name='password_reset_request'),
    
 ]

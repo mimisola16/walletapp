@@ -16,6 +16,20 @@ from django.http import JsonResponse
 import requests
 import random
 from decimal import Decimal
+# Password Reset
+from django.core.mail import send_mail, BadHeaderError
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.db.models.query_utils import Q
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+
+from .tokens import account_activation_token
+from django.contrib.sites.shortcuts import get_current_site
+
+from django.db import IntegrityError
+from django.utils.http import urlsafe_base64_decode
 
 def register(request):
     if request.method == 'POST':
@@ -299,4 +313,36 @@ def wallet_success(request):
         return render(request, "dashboard/success.html", {"amount": amount, "wallet": wallet})
     
     return render(request, "dashboard/top-up-failure.html")  
+
+def password_reset_request(request):
+    if request.method == "POST":
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            associated_users = CustomUser.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:
+                    subject = "Password Reset Requested"
+                    email_template_name = "password_reset_email.txt"
+                    c = {
+                    "email":user.email,
+                    'domain':'127.0.0.1:8000',
+                    'site_name': 'Website',
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "user": user,
+                    'token': default_token_generator.make_token(user),
+                    'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, c)
+                    try:
+                        send_mail(subject, email, 'mariamafolabi231@gmail.com' , [user.email], fail_silently=True)
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+                    return redirect ("/password_reset/done/")
+    password_reset_form = PasswordResetForm()
+    return render(request=request, template_name="password_reset.html", context={"password_reset_form":password_reset_form})
+
+
+def activation_sent_view(request):
+    return render(request, 'activation_sent.html')
 
