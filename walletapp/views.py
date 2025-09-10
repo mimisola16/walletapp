@@ -26,7 +26,7 @@ class MyHome(TemplateView):
         context['hot_trend'] = Shop.objects.order_by('-created_at')[3:5]
         context['featured_shop'] = Shop.objects.filter(appear_home='Feature')[:4]  # Filter shops that appear on the home page
         context['best_seller_product']=Products.objects.filter(best_seller_product=True).order_by('-created_at')[1:4]
-      
+        context['best_seller_product']=Products.objects.filter(best_seller_product=True).order_by('-created_at')[1:4]
         return context
 
 
