@@ -38,6 +38,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +51,31 @@ INSTALLED_APPS = [
      'basket',
      'checkout'
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "MIMI STORES",
+    "site_header": "MIMI STORES",
+    "site_brand": "Admin Panel",
+    "welcome_sign": "Welcome to MIMI STORES Admin",
+    "copyright": "MIMI STORES Team",
+
+    # Top menu links
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Docs", "url": "https://docs.djangoproject.com/en/4.0/", "new_window": True},
+    ],
+
+    # Icons for models
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
+
+    # UI tweaks
+    "show_ui_builder": True,  # Toggle theme customization in the UI
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
