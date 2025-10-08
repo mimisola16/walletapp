@@ -49,24 +49,24 @@ Ashion | Delivery Options
         <label for="number" class="form-label">Phone number</label>
         <input type="text" class="form-control" id="num" placeholder="080087665445">
       </div>
+      <!--<div class="col-md-6">-->
+      <!--  <label for="state" class="form-label">State</label>-->
+      <!--  <select class="form-select" id="state" required>-->
+      <!--    <option value="">Choose..</option>-->
+      <!--    <option>A</option>-->
+      <!--  </select>-->
+      <!--  <div class="invalid-feedback">-->
+      <!--    Please provide a valid state.-->
+      <!--  </div>-->
+      <!--</div>-->
       <div class="col-md-6">
-        <label for="state" class="form-label">State</label>
-        <select class="form-select" id="state" required>
-          <option value="">Choose..</option>
-          <option>A</option>
-        </select>
-        <div class="invalid-feedback">
-          Please provide a valid state.
-        </div>
-      </div>
-      <div class="col-md-3">
         <label for="Postcode" class="form-label">Postcode</label>
         <input type="text" class="form-control" id="postCode" placeholder="12345">
-       
+
       </div>
     </div>
-    
-    
+
+
     <div class="col-12 categories__text mt-5">
       <h1 class="h2">Payment Options</h1>
     </div>
@@ -75,12 +75,12 @@ Ashion | Delivery Options
       </div>
       <hr />
     </div>
-    
+
     <div class="container">
       <div class="row g-3">
         <div class="col-md-4 col-lg-4 order-md-last p-0 order-3">
           <div class="d-flex bd-highlight ms-0">
-           
+
             <div class="p-2 flex-grow-1 bd-highlight">Sub Total:</div>
             <div class="p-2 bd-highlight"><span class="fw-bold h5">&#8358;</span><span id="sub_total"
                 class="fw-bold h5">{{basket.get_subtotal_price}}</span></div>
@@ -103,7 +103,7 @@ Ashion | Delivery Options
         </div>
       </div>
     </div>
-    
+
   </form>
   <!-- Wallet Payment Modal -->
 <div class="modal fade" id="walletModal" tabindex="-1" aria-labelledby="walletModalLabel" aria-hidden="true">
@@ -183,10 +183,10 @@ Ashion | Delivery Options
     handler.openIframe();
   }
 
-  
+
 
   function payWithWallet() {
-    var amount = `{{ basket.get_total_price }}`;  
+    var amount = `{{ basket.get_total_price }}`;
 
     fetch("{% url 'checkout:pay_with_wallet' %}", {
       method: 'POST',
@@ -224,9 +224,9 @@ Ashion | Delivery Options
   }
 </script>
 
-   
-    
-<!--     
+
+
+<!--
     <script>
       function payWithPaystack(){
         var handler = PaystackPop.setup({

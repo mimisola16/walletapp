@@ -6,7 +6,7 @@ from walletapp.models import Products
 
 
 class Basket():
-   
+
     def __init__(self, request):
         self.session = request.session
         basket = self.session.get(settings.BASKET_SESSION_ID)
@@ -62,7 +62,7 @@ class Basket():
     def get_subtotal_price(self):
         return sum(Decimal(item['price']) * item['qty'] for item in self.basket.values())
 
-   
+
     def get_delivery_price(self):
         newprice = 0.00
 
@@ -96,17 +96,25 @@ class Basket():
             del self.basket[product_id]
             self.save()
 
+    # def clear(self):
+    #     # Remove basket from session
+    #     del self.session[settings.BASKET_SESSION_ID]
+    #     del self.session["address"]
+    #     del self.session["purchase"]
+    #     self.save()
+
     def clear(self):
-        # Remove basket from session
-        del self.session[settings.BASKET_SESSION_ID]
-        del self.session["address"]
-        del self.session["purchase"]
+        # Safely remove session keys if they exist
+        self.session.pop(settings.BASKET_SESSION_ID, None)
+        self.session.pop("address", None)
+        self.session.pop("purchase", None)
         self.save()
+
 
     def save(self):
         self.session.modified = True
 
-    
+
 """
 Code in this file has been inspried/reworked from other known works. Plese ensure that
 the License below is included in any of your work that is directly copied from

@@ -16,7 +16,7 @@ from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = os.path.join(BASE_DIR, "templates") 
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 STATIC_DIR = os.path.join(BASE_DIR,"static")
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-xwss6h2^)czysja0(rsc+7k=_xh5_8dh%+)cqoq0e@s*hjt_vb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['Mimistores.pythonanywhere.com']
 
 
 # Application definition
@@ -116,7 +116,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                  'basket.context_processor.basket',
-                        
+
             ],
         },
     },
@@ -171,9 +171,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    STATIC_DIR,
-]
+STATIC_ROOT = BASE_DIR/'staticfiles'
+STATICFILES_DIRS = [BASE_DIR/ "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -184,5 +183,5 @@ AUTH_USER_MODEL = 'walletapp.CustomUser'
 #Basket session ID
 BASKET_SESSION_ID = 'basket'
 LOGIN_URL = '/account/login/'
-PAYSTACK_PUBLIC_KEY = 'pk_test_db9118a0376eb304c98d8adc33eeabcec638dec0'
-PAYSTACK_SECRET_KEY = 'sk_test_b437a50bcfe02ae4d9b33baac55f90bae488b92b'
+PAYSTACK_PUBLIC_KEY = 'pk_test_adb00b36dba301a0832489223e93a899e96a570c'
+PAYSTACK_SECRET_KEY = 'sk_test_20019f453606ecf4a2c90bb9b75548e087e714c5'

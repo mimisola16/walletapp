@@ -43,11 +43,11 @@ class CustomAccountManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self.create_user(email, user_name, password, **other_fields)
-    
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     MALE = 'Male'
     FEMALE = 'Female'
-    
+
     CHOOSE = ''
 
     GENDER_OPTIONS = [
@@ -55,7 +55,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         (FEMALE, 'Female'),
         (CHOOSE, 'Select Gender'),
     ]
-    
+
     VENDOR = 'Vendor'
     USER = 'User'
 
@@ -69,8 +69,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     gender = models.CharField(max_length=30, choices=GENDER_OPTIONS, default=CHOOSE, blank=True, null=True)
     user_type = models.CharField(max_length=100, choices=USERTYPE_CHOICES, default=CHOOSE, null=True)
-    is_staff = models.BooleanField(default=True) 
-    is_active = models.BooleanField(default=True) 
+    is_staff = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     objects = CustomAccountManager()
 
@@ -78,8 +78,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['user_name']
 
     def __str__(self):
-        return self.email  
-    
+        return self.email
+
     def activate_user(self):
         self.is_active =True
         self.save()
@@ -91,7 +91,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Categories(MPTTModel):
-   
+
     cat_name = models.CharField(verbose_name="Category Name",help_text="Required and unique",max_length=255,)
     slug = models.SlugField( max_length=255, unique=True)
     parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
@@ -113,7 +113,7 @@ class Categories(MPTTModel):
     # def category_img(self):
     #     if self.cat_img:
     #         return self.cat_img.url
-          
+
 
 
 
@@ -139,8 +139,8 @@ class Shop(models.Model):
     appear_home = models.CharField(max_length=50, choices=APPEAR_HOME_FIELD, default=CHOOSE)
     featured_shop = models.BooleanField()
     popular_shop = models.BooleanField(null=True)
-    
-    
+
+
     monday_start_time = models.TimeField(null=True, blank=True)
     monday_end_time = models.TimeField(null=True, blank=True)
     tuesday_start_time = models.TimeField(null=True, blank=True)
@@ -157,7 +157,7 @@ class Shop(models.Model):
     sunday_end_time = models.TimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     uploaded_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return self.shop_name
 
@@ -174,7 +174,7 @@ class Shop(models.Model):
         return reverse('walletapp:single_shop', kwargs={
             'slug': self.slug,
         })
-    
+
 class Products(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     shop_name = models.ForeignKey(Shop, verbose_name='Shop Name', on_delete=models.CASCADE, related_name='products')
@@ -186,7 +186,7 @@ class Products(models.Model):
     no_of_stock = models.PositiveIntegerField(verbose_name='Number of stocks')
     in_stock = models.BooleanField(default=True)
     content = HTMLField()
-    
+
     best_seller_product = models.BooleanField(null=True, blank=True)
     hot_trend= models.BooleanField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -195,7 +195,7 @@ class Products(models.Model):
 
     objects = models.Manager()
     products = models.Manager()
-   
+
     class Meta:
         verbose_name_plural='Products'
         ordering = ('-created_at',)
@@ -203,23 +203,23 @@ class Products(models.Model):
     def show_image1(self):
         if self.product_image1:
             return self.product_image1.url
-        
-    def __str__(self): 
-        return self.product_name   
-    
+
+    def __str__(self):
+        return self.product_name
+
     def get_absolute_url(self):
         return reverse('walletapp:product_detail', args=[self.slug])
 
-    
+
 
 
 class Location(models.Model):
     address=models.TextField(max_length=100, null=True)
-    phone = models.CharField(max_length=100, null=True) 
+    phone = models.CharField(max_length=100, null=True)
     support=models.EmailField()
-    
-    
-    def __str__(self): 
+
+
+    def __str__(self):
         return self.address
 
 class Address(models.Model):
@@ -246,11 +246,11 @@ class Address(models.Model):
 
     def __str__(self):
         return "Address"
-    
+
 
 class Wallet(models.Model):
     user = models.OneToOneField(CustomUser, verbose_name="Customer", on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return f"{self.user.username}'s Wallet - ₦{self.balance}"
+        return f"{self.user.user_name}'s Wallet - ₦{self.balance}"

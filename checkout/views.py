@@ -12,7 +12,7 @@ from django.shortcuts import render
 from django.conf import settings
 from checkout.paystack import PaystackClient
 import requests
-from walletapp.models import Address  
+from walletapp.models import Address
 from walletapp.models import *
 
 
@@ -104,7 +104,7 @@ def payment_selection(request):
     return render(request, "checkout/payment_selection.html", {})
 
 # def payment_selection(request):
-    
+
 
 #     session = request.session
 #     if "address" not in request.session:
@@ -123,7 +123,7 @@ def payment_completed(request):
     reference = request.POST.get('reference')
 
     # Verify the transaction with Paystack
-    headers = {'Authorization': 'Bearer {{ sk_test_b437a50bcfe02ae4d9b33baac55f90bae488b92b }}'}
+    headers = {'Authorization': 'Bearer {{ sk_test_20019f453606ecf4a2c90bb9b75548e087e714c5 }}'}
     response = requests.get('https://api.paystack.co/transaction/verify/' + reference, headers=headers)
 
     # Get the transaction data from the response
@@ -161,18 +161,18 @@ def payment_completed(request):
 @login_required
 def payment_successful(request):
     basket = Basket(request)
+
+    # Get products before clearing basket
+    products = [item['products'] for item in basket]
+
+    # Clear basket and session data
     basket.clear()
-    
-    purchased_product_ids = request.session.get('purchased_product_ids', [])
-    products = Products.objects.filter(id__in=purchased_product_ids)
-      # Debugging code
-    print(products) # Check if any products are returned
-    
+
     context = {
         'products': products
     }
-    
-    return render(request, "checkout/payment_successful.html",context)
+
+    return render(request, "checkout/payment_successful.html", context)
 
 @login_required
 def pay_with_wallet(request):
